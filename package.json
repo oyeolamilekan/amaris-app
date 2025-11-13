@@ -1,0 +1,40 @@
+{
+  "name": "amaris",
+  "private": true,
+  "type": "module",
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "better-auth": "^1.3.28",
+      "dotenv": "^17.2.2",
+      "zod": "^4.1.11",
+      "typescript": "^5.8.2",
+      "tsdown": "^0.15.5",
+      "@polar-sh/better-auth": "^1.1.3"
+    }
+  },
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "build": "bun run --filter '*' build",
+    "check-types": "bun run --filter '*' check-types",
+    "dev:native": "bun run --filter native dev",
+    "dev:web": "bun run --filter web dev",
+    "dev:server": "bun run --filter server dev",
+    "db:push": "bun run --filter @amaris/db db:push",
+    "db:studio": "bun run --filter @amaris/db db:studio",
+    "db:generate": "bun run --filter @amaris/db db:generate",
+    "db:migrate": "bun run --filter @amaris/db db:migrate"
+  },
+  "packageManager": "bun@1.3.1",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "tsdown": "^0.15.5",
+    "@types/bun": "^1.2.6"
+  }
+}
