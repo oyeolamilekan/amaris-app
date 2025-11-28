@@ -1,5 +1,6 @@
 {
   "name": "@amaris/db",
+  "main": "./src/index.ts",
   "type": "module",
   "exports": {
     ".": {
