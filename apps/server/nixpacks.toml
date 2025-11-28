@@ -1,13 +1,3 @@
-providers = ["bun", "node"]
-
 [phases.setup]
-nixPkgs = ["bun", "nodejs_22"]
 
-[phases.install]
-cmds = ["bun install"]
-
-[phases.build]
-cmds = ["bun run build"]
-
-[start]
-cmd = "bun run start"
+nixPkgs = ['...', 'bun']
