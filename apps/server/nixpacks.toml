@@ -1,16 +1,13 @@
+providers = ["bun", "node"]
+
 [phases.setup]
-nixPkgs = ["bun", "nodejs"]
+nixPkgs = ["bun", "nodejs_22"]
 
 [phases.install]
-cmds = ["bun install --frozen-lockfile"]
+cmds = ["bun install"]
 
 [phases.build]
-cmds = [
-  "bun run typecheck"
-]
+cmds = ["bun run build"]
 
 [start]
-cmd = "bun src/server/index.ts"
-
-[variables]
-NODE_ENV = "production"
+cmd = "bun run start"
