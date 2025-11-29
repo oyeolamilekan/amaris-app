@@ -26,6 +26,7 @@
     "dev:server": "bun run --filter server dev",
     "start:web": "bun run --filter web start",
     "start:server": "bun run db:push && bun run --filter server start",
+    "start:studio": "bun run --filter @amaris/db db:studio",
     "db:push": "bun run --filter @amaris/db db:push",
     "db:studio": "bun run --filter @amaris/db db:studio",
     "db:generate": "bun run --filter @amaris/db db:generate",
