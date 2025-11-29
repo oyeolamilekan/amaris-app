@@ -15,6 +15,13 @@
       "when": 1763227471225,
       "tag": "0001_typical_wind_dancer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764454721140,
+      "tag": "0002_high_toad_men",
+      "breakpoints": true
     }
   ]
 }

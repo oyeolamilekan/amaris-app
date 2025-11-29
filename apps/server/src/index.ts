@@ -7,6 +7,7 @@ import generationRoutes from "./routes/generations";
 import uploadRoutes from "./routes/upload";
 import chatRoutes from "./routes/chat";
 import webhookRoutes from "./routes/webhooks";
+import adminRoutes from "./routes/admin";
 import "./queue/webhook";
 
 const app = new Hono();
@@ -35,6 +36,9 @@ app.route("/api/chats", chatRoutes);
 
 // Mount webhook routes
 app.route("/api/webhooks", webhookRoutes);
+
+// Mount admin routes
+app.route("/api/admin", adminRoutes);
 
 app.get("/", (c) => {
   return c.text("OK");
