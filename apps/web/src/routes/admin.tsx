@@ -19,6 +19,8 @@ export default function AdminLayout() {
     // without running codegen or updating the client types manually, but it exists in the DB/API response.
     const user = session.user as any;
 
+    console.log(user);
+
     if (user.role !== "admin") {
       navigate("/dashboard");
     }
