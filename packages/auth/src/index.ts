@@ -24,6 +24,14 @@ export const auth = betterAuth<BetterAuthOptions>({
 
     schema: schema,
   }),
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "user",
+      },
+    },
+  },
   trustedOrigins: [process.env.CORS_ORIGIN || ""],
   emailAndPassword: {
     enabled: true,
