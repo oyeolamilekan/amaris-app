@@ -144,9 +144,9 @@ export default function AdminPackagesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="overflow-hidden rounded-md border">
             <table className="w-full caption-bottom text-sm">
-              <thead className="[&_tr]:border-b">
+              <thead className="bg-muted/50 [&_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                     ID
@@ -154,10 +154,10 @@ export default function AdminPackagesPage() {
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
                     Name
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">
                     Credits
                   </th>
-                  <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                  <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground">
                     Price (Cents)
                   </th>
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
@@ -176,8 +176,10 @@ export default function AdminPackagesPage() {
                   >
                     <td className="p-4 align-middle font-medium">{pkg.id}</td>
                     <td className="p-4 align-middle">{pkg.name}</td>
-                    <td className="p-4 align-middle">{pkg.credits}</td>
-                    <td className="p-4 align-middle">{pkg.price}</td>
+                    <td className="p-4 text-right align-middle">
+                      {pkg.credits}
+                    </td>
+                    <td className="p-4 text-right align-middle">{pkg.price}</td>
                     <td className="p-4 align-middle font-mono text-xs">
                       {pkg.polarProductId}
                     </td>
