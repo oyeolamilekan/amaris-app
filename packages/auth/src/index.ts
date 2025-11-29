@@ -6,8 +6,6 @@ import { db } from "@amaris/db";
 import * as schema from "@amaris/db/schema/auth";
 import { creditPackage } from "@amaris/db/schema/auth";
 
-import { CREDIT_PACKAGES as DEFAULT_PACKAGES } from "./credits";
-
 const dbPackages = await db
   .select()
   .from(creditPackage)
@@ -15,9 +13,8 @@ const dbPackages = await db
     console.error("Failed to load credit packages", e);
     return [];
   });
-const packages = dbPackages.length > 0 ? dbPackages : DEFAULT_PACKAGES;
 
-export const CREDIT_PACKAGES = packages;
+export const CREDIT_PACKAGES = dbPackages;
 export const auth = betterAuth<BetterAuthOptions>({
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -57,7 +54,7 @@ export const auth = betterAuth<BetterAuthOptions>({
       use: [
         checkout({
           products: [
-            ...packages.map((pkg) => ({
+            ...dbPackages.map((pkg) => ({
               productId: pkg.polarProductId,
               slug: pkg.id,
             })),

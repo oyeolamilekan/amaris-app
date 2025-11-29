@@ -1,7 +1,6 @@
 import { Queue, Worker, Job } from "bullmq";
 import { connection } from "./config";
 import { addCredits } from "../services";
-import { CREDIT_PACKAGES } from "@amaris/auth/credits";
 import { db, eq } from "@amaris/db";
 import { user, creditPackage } from "@amaris/db/schema/auth";
 
@@ -80,14 +79,6 @@ const handleOrderCreated = async (order: any) => {
 
   if (dbPkg) {
     creditsToAdd = dbPkg.credits;
-  } else {
-    // Fallback to static config
-    const staticPkg = CREDIT_PACKAGES.find(
-      (pkg: any) => pkg.polarProductId === productId,
-    );
-    if (staticPkg) {
-      creditsToAdd = staticPkg.credits;
-    }
   }
 
   if (creditsToAdd > 0) {
@@ -125,7 +116,7 @@ export const webhookWorker = new Worker<WebhookJobData>(
   {
     connection,
     concurrency: 5, // Process up to 5 webhooks concurrently
-  }
+  },
 );
 
 // Handle worker events
