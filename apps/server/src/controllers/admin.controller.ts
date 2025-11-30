@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { db, eq } from "@amaris/db";
-import { creditPackage } from "@amaris/db/schema/auth";
+import { creditPackage, user } from "@amaris/db/schema/auth";
+import { userCredits } from "@amaris/db/schema/generations";
 import { z } from "zod";
 
 // Schemas
@@ -17,6 +18,10 @@ const updatePackageSchema = z.object({
   credits: z.number().int().positive().optional(),
   price: z.number().int().positive().optional(),
   polarProductId: z.string().min(1).optional(),
+});
+
+const updateUserCreditsSchema = z.object({
+  credits: z.number().int().min(0),
 });
 
 /**
@@ -42,7 +47,10 @@ export const createPackage = async (c: Context) => {
     return c.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return c.json({ error: "Validation failed", details: error.errors }, 400);
+      return c.json(
+        { error: "Validation failed", details: (error as any).errors },
+        400,
+      );
     }
     console.error("Failed to create package:", error);
     return c.json({ error: "Failed to create package" }, 500);
@@ -69,7 +77,10 @@ export const updatePackage = async (c: Context) => {
     return c.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return c.json({ error: "Validation failed", details: error.errors }, 400);
+      return c.json(
+        { error: "Validation failed", details: (error as any).errors },
+        400,
+      );
     }
     console.error("Failed to update package:", error);
     return c.json({ error: "Failed to update package" }, 500);
@@ -87,5 +98,66 @@ export const deletePackage = async (c: Context) => {
   } catch (error) {
     console.error("Failed to delete package:", error);
     return c.json({ error: "Failed to delete package" }, 500);
+  }
+};
+
+/**
+ * List all users with their credits
+ */
+export const listUsers = async (c: Context) => {
+  const users = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      role: (user as any).role,
+      createdAt: user.createdAt,
+      credits: userCredits.credits,
+    })
+    .from(user)
+    .leftJoin(userCredits, eq(user.id, userCredits.userId));
+
+  return c.json(users);
+};
+
+/**
+ * Update user credits
+ */
+export const updateUserCredits = async (c: Context) => {
+  const userId = c.req.param("userId");
+  try {
+    const body = await c.req.json();
+    const { credits } = updateUserCreditsSchema.parse(body);
+
+    // Check if user credits record exists
+    const [existing] = await db
+      .select()
+      .from(userCredits)
+      .where(eq(userCredits.userId, userId));
+
+    if (existing) {
+      await db
+        .update(userCredits)
+        .set({ credits, updatedAt: new Date() })
+        .where(eq(userCredits.userId, userId));
+    } else {
+      await db.insert(userCredits).values({
+        id: crypto.randomUUID(),
+        userId,
+        credits,
+      });
+    }
+
+    return c.json({ success: true });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return c.json(
+        { error: "Validation failed", details: (error as any).errors },
+        400,
+      );
+    }
+    console.error("Failed to update user credits:", error);
+    return c.json({ error: "Failed to update user credits" }, 500);
   }
 };

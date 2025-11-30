@@ -5,6 +5,8 @@ import {
   createPackage,
   updatePackage,
   deletePackage,
+  listUsers,
+  updateUserCredits,
 } from "../controllers/admin.controller";
 
 const app = new Hono();
@@ -32,5 +34,17 @@ app.put("/packages/:id", requireAdmin, updatePackage);
  * Delete a credit package
  */
 app.delete("/packages/:id", requireAdmin, deletePackage);
+
+/**
+ * GET /api/admin/users
+ * List all users with their credits
+ */
+app.get("/users", requireAdmin, listUsers);
+
+/**
+ * PUT /api/admin/users/:userId/credits
+ * Update user credits
+ */
+app.put("/users/:userId/credits", requireAdmin, updateUserCredits);
 
 export default app;

@@ -3,8 +3,7 @@
  * Handles administrative tasks like package management
  */
 
-const API_BASE_URL =
-  import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
 
 export interface CreditPackage {
   id: string;
@@ -28,6 +27,16 @@ export interface UpdatePackageRequest {
   credits?: number;
   price?: number;
   polarProductId?: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+  role: string;
+  createdAt: string;
+  credits: number | null;
 }
 
 /**
@@ -81,5 +90,33 @@ export async function deletePackage(id: string): Promise<void> {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete package");
+  return res.json();
+}
+
+/**
+ * List all users
+ */
+export async function listUsers(): Promise<User[]> {
+  const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch users");
+  return res.json();
+}
+
+/**
+ * Update user credits
+ */
+export async function updateUserCredits(
+  userId: string,
+  credits: number,
+): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/credits`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ credits }),
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to update user credits");
   return res.json();
 }
