@@ -14,7 +14,7 @@ import {
   listUserStyleReferences,
   processGeneration,
 } from "../services";
-import { validateGenerationRequest, getAspectRatioDimensions } from "../lib/ai";
+import { validateGenerationRequest } from "../lib/ai";
 import { getModelById, getDefaultModel, isValidModelId } from "../lib/models";
 import { db } from "@amaris/db";
 import { creditPackage } from "@amaris/db/schema/auth";
@@ -33,7 +33,6 @@ export async function generateImage(c: Context<{ Variables: Variables }>) {
     const body = (await c.req.json()) as GenerateImageInput;
     const {
       prompt,
-      aspectRatio,
       styleImageUrl,
       styleImageName,
       model,
@@ -44,7 +43,6 @@ export async function generateImage(c: Context<{ Variables: Variables }>) {
     // Validate request
     const validation = validateGenerationRequest({
       prompt,
-      aspectRatio,
     });
 
     if (!validation.valid) {
@@ -67,19 +65,15 @@ export async function generateImage(c: Context<{ Variables: Variables }>) {
       selectedModel = getModelById(model)!;
     }
 
-    // Get dimensions for aspect ratio
-    const dimensions = getAspectRatioDimensions(aspectRatio);
-
     // Create generation record
     const generationId = await createGeneration({
       userId,
       chatId,
       prompt,
       styleImageUrl,
-      aspectRatio,
       model: selectedModel.type,
       creditsUsed: 1,
-      dimensions,
+      dimensions: { width: 1024, height: 1024 },
       styleImageName,
       outputStyle,
     });
@@ -96,7 +90,6 @@ export async function generateImage(c: Context<{ Variables: Variables }>) {
       generationId,
       prompt,
       styleImageUrl,
-      aspectRatio,
       model: selectedModel,
       userId,
     }).catch((error) => {

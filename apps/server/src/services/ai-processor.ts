@@ -1,5 +1,4 @@
 import { generateText } from "ai";
-import { getAspectRatioDimensions } from "../lib/ai";
 import { completeGeneration, failGeneration } from "./generation";
 import type { Model } from "../lib/models";
 
@@ -7,7 +6,6 @@ export interface ProcessGenerationInput {
   generationId: string;
   prompt: string;
   styleImageUrl: string;
-  aspectRatio: string;
   model?: Model;
   userId: string;
 }
@@ -103,7 +101,7 @@ async function generateImageWithGemini(
 export async function processGeneration(
   input: ProcessGenerationInput,
 ): Promise<void> {
-  const { generationId, prompt, styleImageUrl, aspectRatio, model } = input;
+  const { generationId, prompt, styleImageUrl, model } = input;
 
   try {
     console.log(`[Generation ${generationId}] Starting`);
@@ -113,7 +111,7 @@ export async function processGeneration(
     }
 
     const styleImageBase64 = await downloadImageAsBase64(styleImageUrl);
-    const dimensions = getAspectRatioDimensions(aspectRatio);
+    const dimensions = { width: 1024, height: 1024 };
 
     const generatedImageDataUrl = await generateImageWithGemini(
       prompt,

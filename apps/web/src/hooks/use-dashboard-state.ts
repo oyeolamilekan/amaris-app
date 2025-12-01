@@ -114,7 +114,6 @@ export function useDashboardState() {
                 color: "#4285F4",
               },
               config: {
-                aspectRatio: newChat.aspectRatio,
                 imageCount: newChat.imageCount,
                 styleImagePreview: null,
                 styleImageUrl: null,
@@ -171,7 +170,6 @@ export function useDashboardState() {
                   color: "#4285F4",
                 },
                 config: {
-                  aspectRatio: dbChat.aspectRatio,
                   imageCount: dbChat.imageCount,
                   styleImagePreview: dbChat.styleImageUrl || null,
                   styleImageUrl: dbChat.styleImageUrl || null,
@@ -201,7 +199,6 @@ export function useDashboardState() {
                   color: "#4285F4",
                 },
                 config: {
-                  aspectRatio: dbChat.aspectRatio,
                   imageCount: dbChat.imageCount,
                   styleImagePreview: dbChat.styleImageUrl || null,
                   styleImageUrl: dbChat.styleImageUrl || null,
@@ -235,10 +232,10 @@ export function useDashboardState() {
     loadChats();
   }, [session]);
 
-  // Redirect to login if not authenticated
+  // Redirect to home if not authenticated
   useEffect(() => {
     if (!session && !isPending) {
-      navigate("/login");
+      navigate("/");
     }
   }, [session, isPending, navigate]);
 

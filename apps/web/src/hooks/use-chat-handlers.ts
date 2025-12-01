@@ -38,22 +38,6 @@ export function useChatHandlers({
     // For now, just update locally - can add debouncing later
   };
 
-  const handleAspectRatioChange = async (chatId: string, ratio: string) => {
-    // Update local state optimistically
-    setChats((prev) =>
-      updateChat(prev, chatId, (chat) => ({
-        ...chat,
-        config: { ...chat.config, aspectRatio: ratio },
-      })),
-    );
-
-    try {
-      await updateChatAPI(chatId, { aspectRatio: ratio });
-    } catch (error) {
-      console.error("Failed to update aspect ratio:", error);
-    }
-  };
-
   const handleImageCountChange = async (chatId: string, value: number) => {
     const maxImages = hasProSubscription
       ? PRO_TIER_MAX_IMAGES
@@ -229,7 +213,6 @@ export function useChatHandlers({
           color: "#4285F4",
         },
         config: {
-          aspectRatio: dbChat.aspectRatio,
           imageCount: dbChat.imageCount,
           outputStyle: dbChat.outputStyle,
           styleImagePreview: dbChat.styleImageUrl || null,
@@ -316,7 +299,6 @@ export function useChatHandlers({
 
   return {
     handleDraftChange,
-    handleAspectRatioChange,
     handleImageCountChange,
     handleModelChange,
     handleOutputStyleChange,

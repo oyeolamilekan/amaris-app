@@ -32,7 +32,6 @@ export async function createChatSession(c: Context<{ Variables: Variables }>) {
       name: body.name || "New Conversation",
       modelId: body.modelId,
       modelType: body.modelType,
-      aspectRatio: body.aspectRatio,
       imageCount: body.imageCount,
       outputStyle: body.outputStyle,
     };
@@ -98,7 +97,6 @@ export async function updateChatSession(c: Context<{ Variables: Variables }>) {
       isGenerating: body.isGenerating,
       modelId: body.modelId,
       modelType: body.modelType,
-      aspectRatio: body.aspectRatio,
       imageCount: body.imageCount,
       outputStyle: body.outputStyle,
       styleImageUrl: body.styleImageUrl,

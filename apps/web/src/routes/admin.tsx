@@ -21,7 +21,7 @@ export default function AdminLayout() {
     if (isPending) return;
 
     if (!session) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 

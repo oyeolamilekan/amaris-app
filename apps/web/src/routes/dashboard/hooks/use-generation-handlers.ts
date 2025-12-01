@@ -87,7 +87,6 @@ export function useGenerationHandlers({
       for (let i = 0; i < activeChat.config.imageCount; i++) {
         const response = await generateImage({
           prompt,
-          aspectRatio: activeChat.config.aspectRatio,
           styleImageUrl: activeChat.config.styleImageUrl,
           styleImageName: activeChat.config.styleImageName ?? undefined,
           model: activeChat.model.id,

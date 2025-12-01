@@ -65,11 +65,9 @@ export default function Home() {
               </Link>
             ) : (
               <>
-                <Link to="/login">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
-                </Link>
+                <Button variant="ghost" size="sm" onClick={handleGoogleSignIn}>
+                  Sign In
+                </Button>
                 <Button size="sm" onClick={handleGoogleSignIn}>
                   Get Started
                 </Button>
@@ -113,16 +111,6 @@ export default function Home() {
                   <GoogleIcon className="h-5 w-5" />
                   Continue with Google
                 </Button>
-                <p className="text-xs text-muted-foreground">
-                  By continuing, you agree to our{" "}
-                  <Link to="#" className="underline hover:text-foreground">
-                    Terms
-                  </Link>{" "}
-                  and{" "}
-                  <Link to="#" className="underline hover:text-foreground">
-                    Privacy
-                  </Link>
-                </p>
               </>
             )}
           </div>
@@ -175,19 +163,16 @@ export default function Home() {
             </div>
             Amaris
           </div>
-          <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Amaris AI. All rights reserved.
-          </div>
-          <div className="flex gap-6 text-sm text-muted-foreground">
-            <Link to="#" className="hover:text-foreground">
-              Terms
+          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <Link to="/terms" className="hover:underline">
+              Terms of Service
             </Link>
-            <Link to="#" className="hover:text-foreground">
-              Privacy
+            <Link to="/privacy" className="hover:underline">
+              Privacy Policy
             </Link>
-            <Link to="#" className="hover:text-foreground">
-              Contact
-            </Link>
+            <span>
+              © {new Date().getFullYear()} Amaris AI. All rights reserved.
+            </span>
           </div>
         </div>
       </footer>

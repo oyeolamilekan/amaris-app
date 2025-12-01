@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2, Download, X, Sparkles, Plus } from "lucide-react";
 import { useGenerationHandlers } from "@/hooks/use-generation-handlers";
-import { ASPECT_RATIO_OPTIONS } from "@/constants";
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router";
 import type { ChatSession, ChatMessage } from "../types";
@@ -300,33 +299,6 @@ export default function ConversationDetail() {
                 >
                   ✕ Remove
                 </Button>
-              </div>
-
-              {/* Aspect Ratio Selector */}
-              <div className="flex items-center gap-3 text-sm">
-                <span className="text-muted-foreground">Aspect Ratio:</span>
-                <div className="flex gap-2">
-                  {ASPECT_RATIO_OPTIONS.map((option) => (
-                    <Button
-                      key={option.id}
-                      variant={
-                        activeChat?.config.aspectRatio === option.id
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() =>
-                        chatHandlers.handleAspectRatioChange(id!, option.id)
-                      }
-                      className="gap-1"
-                    >
-                      <span
-                        className={`h-3 ${option.width} rounded-sm border-2 border-current`}
-                      ></span>
-                      {option.label}
-                    </Button>
-                  ))}
-                </div>
               </div>
 
               {/* Prompt Input */}

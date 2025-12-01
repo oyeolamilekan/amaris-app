@@ -5,7 +5,7 @@
 import { getDefaultModel } from "@/lib/models";
 import type { ChatSession, ChatMessage } from "./types";
 import type { Generation } from "@/lib/api";
-import { DEFAULT_ASPECT_RATIO, DEFAULT_IMAGE_COUNT } from "./constants";
+import { DEFAULT_IMAGE_COUNT } from "./constants";
 
 /**
  * Create a new chat session
@@ -21,7 +21,6 @@ export function createChatSession(index: number): ChatSession {
     messages: [],
     model: getDefaultModel(),
     config: {
-      aspectRatio: DEFAULT_ASPECT_RATIO,
       imageCount: DEFAULT_IMAGE_COUNT,
       styleImagePreview: null,
       styleImageUrl: null,

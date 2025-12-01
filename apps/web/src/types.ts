@@ -4,13 +4,6 @@
 
 import type { Model } from "@/lib/models";
 
-export interface AspectRatioOption {
-  id: string;
-  label: string;
-  ratio: string;
-  width: string;
-}
-
 export interface CustomerState {
   activeSubscriptions?: Array<Record<string, unknown>>;
 }
@@ -28,7 +21,6 @@ export interface ChatMessage {
 }
 
 export interface ChatConfig {
-  aspectRatio: string;
   imageCount: number;
   outputStyle?: string;
   styleImagePreview: string | null;

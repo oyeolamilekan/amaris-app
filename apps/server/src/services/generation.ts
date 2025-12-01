@@ -9,7 +9,6 @@ export interface GenerationRecord {
   userId: string;
   prompt: string;
   styleImageUrl: string;
-  aspectRatio: string;
   model: string;
   status: "processing" | "completed" | "failed";
   generatedImageUrl?: string | null;
@@ -24,7 +23,6 @@ export interface CreateGenerationInput {
   userId: string;
   prompt: string;
   styleImageUrl: string;
-  aspectRatio: string;
   model: string;
   creditsUsed: number;
   dimensions: { width: number; height: number };
@@ -54,7 +52,6 @@ export async function createGeneration(
     chatId: input.chatId,
     prompt: input.prompt,
     styleImageUrl: input.styleImageUrl,
-    aspectRatio: input.aspectRatio,
     model: input.model,
     outputStyle: input.outputStyle,
     status: "processing",
@@ -63,7 +60,7 @@ export async function createGeneration(
       dimensions: input.dimensions,
       styleImageName: input.styleImageName,
     },
-  });
+  } as any);
 
   return generationId;
 }

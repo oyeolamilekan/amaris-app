@@ -21,7 +21,6 @@ export const chat = pgTable("chat", {
     .notNull()
     .default("google:gemini-2.0-flash-exp"),
   // Configuration
-  aspectRatio: text("aspect_ratio").notNull().default("1:1"),
   imageCount: integer("image_count").notNull().default(1),
   outputStyle: text("output_style").notNull().default("realistic"),
   styleImageUrl: text("style_image_url"),
@@ -51,7 +50,6 @@ export const generation = pgTable("generation", {
   chatId: text("chat_id").references(() => chat.id, { onDelete: "set null" }),
   prompt: text("prompt").notNull(),
   styleImageUrl: text("style_image_url").notNull(),
-  aspectRatio: text("aspect_ratio").notNull(), // "1:1", "16:9", "9:16", "4:3"
   model: text("model").notNull(), // AI model used
   outputStyle: text("output_style"), // "realistic", "artistic", "anime", "cartoon", "svg", etc.
   status: text("status").notNull().default("pending"), // "pending", "processing", "completed", "failed"

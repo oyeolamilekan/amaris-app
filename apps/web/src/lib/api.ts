@@ -16,7 +16,6 @@ export interface UploadResponse {
 
 export interface GenerateImageRequest {
   prompt: string;
-  aspectRatio: string;
   styleImageUrl: string;
   styleImageName?: string;
   model?: string;
@@ -43,7 +42,6 @@ export interface Generation {
   userId: string;
   prompt: string;
   styleImageUrl: string;
-  aspectRatio: string;
   model: string;
   status: "processing" | "completed" | "failed";
   generatedImageUrl?: string | null;
@@ -274,7 +272,6 @@ export async function pollGenerationStatus(
  */
 
 export interface ChatConfig {
-  aspectRatio: string;
   imageCount: number;
   outputStyle: string;
   styleImageUrl: string | null;
@@ -289,7 +286,6 @@ export interface Chat {
   isGenerating: boolean;
   modelId: string;
   modelType: string;
-  aspectRatio: string;
   imageCount: number;
   outputStyle: string;
   styleImageUrl: string | null;
@@ -313,7 +309,6 @@ export interface CreateChatRequest {
   name: string;
   modelId?: string;
   modelType?: string;
-  aspectRatio?: string;
   imageCount?: number;
   outputStyle?: string;
 }
@@ -324,7 +319,6 @@ export interface UpdateChatRequest {
   isGenerating?: boolean;
   modelId?: string;
   modelType?: string;
-  aspectRatio?: string;
   imageCount?: number;
   outputStyle?: string;
   styleImageUrl?: string;

@@ -12,7 +12,6 @@ export interface ChatRecord {
   isGenerating: boolean;
   modelId: string;
   modelType: string;
-  aspectRatio: string;
   imageCount: number;
   outputStyle: string;
   styleImageUrl: string | null;
@@ -37,7 +36,6 @@ export interface CreateChatInput {
   name: string;
   modelId?: string;
   modelType?: string;
-  aspectRatio?: string;
   imageCount?: number;
   outputStyle?: string;
 }
@@ -48,7 +46,6 @@ export interface UpdateChatInput {
   isGenerating?: boolean;
   modelId?: string;
   modelType?: string;
-  aspectRatio?: string;
   imageCount?: number;
   outputStyle?: string;
   styleImageUrl?: string;
@@ -77,7 +74,6 @@ export async function createChat(input: CreateChatInput): Promise<string> {
     name: input.name,
     modelId: input.modelId || "gemini-2.0-flash-exp",
     modelType: input.modelType || "google:gemini-2.0-flash-exp",
-    aspectRatio: input.aspectRatio || "1:1",
     imageCount: input.imageCount || 1,
     outputStyle: input.outputStyle || "realistic",
   });
