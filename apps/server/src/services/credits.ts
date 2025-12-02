@@ -20,7 +20,10 @@ export async function getUserCredits(userId: string): Promise<UserCreditsInfo> {
 
   if (!credits) {
     // Create credits record for new user with default free credits
-    const defaultCredits = parseInt(process.env.DEFAULT_USER_CREDITS || "0", 10);
+    const defaultCredits = parseInt(
+      process.env.DEFAULT_USER_CREDITS || "4",
+      10,
+    );
     const newCredits = {
       id: crypto.randomUUID(),
       userId,
@@ -42,15 +45,18 @@ export async function getUserCredits(userId: string): Promise<UserCreditsInfo> {
 /**
  * Check if user has sufficient credits
  */
-export async function hasCredits(userId: string, amount: number = 1): Promise<boolean> {
+export async function hasCredits(
+  userId: string,
+  amount: number = 1,
+): Promise<boolean> {
   const [userCreditsRecord] = await db
     .select()
     .from(userCredits)
     .where(eq(userCredits.userId, userId));
 
   if (!userCreditsRecord) {
-    // New users get 50 free credits
-    return 50 >= amount;
+    // New users get 4 free credits
+    return 4 >= amount;
   }
 
   return userCreditsRecord.credits >= amount;
@@ -61,7 +67,7 @@ export async function hasCredits(userId: string, amount: number = 1): Promise<bo
  */
 export async function deductCredits(
   userId: string,
-  amount: number = 1
+  amount: number = 1,
 ): Promise<{ success: boolean; remainingCredits: number }> {
   const [userCreditsRecord] = await db
     .select()
@@ -73,12 +79,12 @@ export async function deductCredits(
     await db.insert(userCredits).values({
       id: crypto.randomUUID(),
       userId,
-      credits: 50 - amount,
+      credits: 4 - amount,
       totalCreditsUsed: amount,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    return { success: true, remainingCredits: 50 - amount };
+    return { success: true, remainingCredits: 4 - amount };
   }
 
   if (userCreditsRecord.credits < amount) {
@@ -105,7 +111,7 @@ export async function deductCredits(
  */
 export async function addCredits(
   userId: string,
-  amount: number
+  amount: number,
 ): Promise<{ success: boolean; newBalance: number }> {
   const [userCreditsRecord] = await db
     .select()
@@ -143,7 +149,7 @@ export async function addCredits(
  */
 export async function resetCredits(
   userId: string,
-  amount: number
+  amount: number,
 ): Promise<{ success: boolean; newBalance: number }> {
   const [userCreditsRecord] = await db
     .select()
