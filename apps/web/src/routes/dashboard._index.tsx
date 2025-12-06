@@ -7,6 +7,7 @@ import { useNavigate, useOutletContext } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Sparkles, MessageSquare, ArrowRight, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface DashboardContext {
   state: any;
@@ -42,8 +43,15 @@ export default function DashboardIndex() {
       <div className="flex h-screen flex-col bg-muted/20">
         <header className="border-b bg-background p-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-semibold">Your Conversations</h1>
-            <Button onClick={handleCreateNewChat} className="gap-2" disabled={isCreating}>
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="md:hidden" />
+              <h1 className="text-2xl font-semibold">Your Conversations</h1>
+            </div>
+            <Button
+              onClick={handleCreateNewChat}
+              className="gap-2"
+              disabled={isCreating}
+            >
               {isCreating ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
@@ -88,7 +96,10 @@ export default function DashboardIndex() {
 
   // Show empty state if no chats
   return (
-    <div className="flex h-screen items-center justify-center bg-muted/20">
+    <div className="flex h-screen items-center justify-center bg-muted/20 relative">
+      <div className="absolute top-4 left-4 md:hidden">
+        <SidebarTrigger />
+      </div>
       <div className="mx-auto max-w-2xl space-y-8 text-center p-8">
         <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mb-4">
           <MessageSquare className="h-12 w-12 text-primary" />
@@ -99,7 +110,8 @@ export default function DashboardIndex() {
             Welcome to Amaris
           </h1>
           <p className="text-xl text-muted-foreground max-w-lg mx-auto">
-            Create your first conversation to start generating unique images with AI-powered style transfer
+            Create your first conversation to start generating unique images
+            with AI-powered style transfer
           </p>
         </div>
 

@@ -13,6 +13,7 @@ import type { ChatSession, ChatMessage } from "../types";
 import type { useDashboardState } from "@/hooks/use-dashboard-state";
 import type { useChatHandlers } from "@/hooks/use-chat-handlers";
 import { BuyCreditsModal } from "@/components/buy-credits-modal";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 interface DashboardContext {
   state: ReturnType<typeof useDashboardState>;
@@ -97,18 +98,21 @@ export default function ConversationDetail() {
   return (
     <div className="flex h-screen flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between border-b bg-background p-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-semibold">{activeChat.name}</h1>
+      <header className="flex items-center justify-between border-b bg-background p-3 md:p-4">
+        <div className="flex items-center gap-2 md:gap-4">
+          <SidebarTrigger className="md:hidden" />
+          <h1 className="text-lg md:text-xl font-semibold truncate max-w-[150px] sm:max-w-xs md:max-w-none">
+            {activeChat.name}
+          </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           <Button
             variant="ghost"
             size="sm"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-xs md:text-sm text-muted-foreground hover:text-foreground px-2 md:px-3"
             onClick={() => setIsBuyCreditsOpen(true)}
           >
-            Credits:{" "}
+            <span className="hidden sm:inline">Credits:</span>
             {state.creditsLeft === null ? (
               <Loader2 className="ml-1 h-3 w-3 animate-spin" />
             ) : (
@@ -117,11 +121,11 @@ export default function ConversationDetail() {
             <Plus className="ml-1 h-3 w-3" />
           </Button>
           {state.hasProSubscription ? (
-            <span className="rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+            <span className="rounded-full bg-primary px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium text-primary-foreground">
               Pro
             </span>
           ) : (
-            <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
+            <span className="rounded-full bg-muted px-2 md:px-3 py-0.5 md:py-1 text-[10px] md:text-xs font-medium">
               Free
             </span>
           )}
@@ -198,7 +202,7 @@ export default function ConversationDetail() {
                       </p>
                     )}
                     {message.images.length > 0 && (
-                      <div className="mt-3 grid grid-cols-2 gap-3">
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {message.images.map((img, idx) => (
                           <div
                             key={idx}
@@ -245,7 +249,7 @@ export default function ConversationDetail() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t bg-background p-4">
+      <div className="border-t bg-background p-3 md:p-4">
         <div className="mx-auto max-w-4xl space-y-3">
           {/* Style Image Upload */}
           {!activeChat?.config.styleImageUrl ? (
@@ -302,7 +306,7 @@ export default function ConversationDetail() {
               </div>
 
               {/* Prompt Input */}
-              <div className="flex items-end gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2">
                 <div className="flex-1">
                   <Input
                     value={activeChat?.draft || ""}
@@ -340,11 +344,11 @@ export default function ConversationDetail() {
               </div>
 
               {/* Image Count Selector */}
-              <div className="flex items-center gap-3 text-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-sm">
                 <span className="text-muted-foreground">
                   Images to generate:
                 </span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {[1, 2, 3, 4, 5, 6].map((num) => (
                     <Button
                       key={num}

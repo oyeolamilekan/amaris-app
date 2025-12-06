@@ -23,11 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  listUsers,
-  updateUserCredits,
-  type User,
-} from "@/lib/admin-api";
+import { listUsers, updateUserCredits, type User } from "@/lib/admin-api";
 
 export default function AdminUsersPage() {
   const queryClient = useQueryClient();
@@ -43,7 +39,13 @@ export default function AdminUsersPage() {
 
   // Update credits mutation
   const updateCreditsMutation = useMutation({
-    mutationFn: async ({ userId, credits }: { userId: string; credits: number }) => {
+    mutationFn: async ({
+      userId,
+      credits,
+    }: {
+      userId: string;
+      credits: number;
+    }) => {
       return updateUserCredits(userId, credits);
     },
     onSuccess: () => {
@@ -70,7 +72,7 @@ export default function AdminUsersPage() {
   const filteredUsers = users?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   if (isLoading) {
@@ -113,8 +115,8 @@ export default function AdminUsersPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-md border">
-            <table className="w-full caption-bottom text-sm">
+          <div className="overflow-x-auto rounded-md border">
+            <table className="w-full caption-bottom text-sm min-w-[800px]">
               <thead className="bg-muted/50 [&_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
@@ -158,7 +160,9 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="p-4 align-middle">
                       <Badge
-                        variant={user.role === "admin" ? "default" : "secondary"}
+                        variant={
+                          user.role === "admin" ? "default" : "secondary"
+                        }
                       >
                         {user.role}
                       </Badge>
@@ -183,7 +187,10 @@ export default function AdminUsersPage() {
                 ))}
                 {filteredUsers?.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="p-4 text-center h-24 text-muted-foreground">
+                    <td
+                      colSpan={5}
+                      className="p-4 text-center h-24 text-muted-foreground"
+                    >
                       No users found.
                     </td>
                   </tr>

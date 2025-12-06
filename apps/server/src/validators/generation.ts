@@ -8,9 +8,6 @@ export const generateImageSchema = z.object({
     .string()
     .min(1, "Prompt is required")
     .max(1000, "Prompt must be less than 1000 characters"),
-  aspectRatio: z.enum(["1:1", "16:9", "9:16", "4:3"], {
-    message: "Invalid aspect ratio",
-  }),
   styleImageUrl: z.string().url("Style image must be a valid URL"),
   styleImageName: z.string().optional(),
   model: z.string().min(1, "Model is required").optional(),

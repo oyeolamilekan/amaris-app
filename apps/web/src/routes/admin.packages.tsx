@@ -144,8 +144,8 @@ export default function AdminPackagesPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-md border">
-            <table className="w-full caption-bottom text-sm">
+          <div className="overflow-x-auto rounded-md border">
+            <table className="w-full caption-bottom text-sm min-w-[800px]">
               <thead className="bg-muted/50 [&_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">

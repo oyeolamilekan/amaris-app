@@ -22,6 +22,7 @@ import {
   SidebarGroupContent,
   SidebarMenuAction,
   SidebarGroupLabel,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -56,6 +57,7 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   const navigate = useNavigate();
+  const { isMobile, setOpenMobile } = useSidebar();
   const { data: session } = authClient.useSession();
   const [customerState, setCustomerState] = React.useState<any>(null);
   const [editingChatId, setEditingChatId] = React.useState<string | null>(null);
@@ -93,7 +95,12 @@ export function AppSidebar({
           <Button
             variant="default"
             className="w-full justify-center gap-2 h-10 font-medium"
-            onClick={onCreateChat}
+            onClick={() => {
+              onCreateChat?.();
+              if (isMobile) {
+                setOpenMobile(false);
+              }
+            }}
           >
             <Sparkles className="h-5 w-5" />
             New Conversation
@@ -109,7 +116,12 @@ export function AppSidebar({
                 <SidebarMenuItem key={chat.id}>
                   <SidebarMenuButton
                     isActive={chat.id === activeChatId}
-                    onClick={() => onChatSelect?.(chat.id)}
+                    onClick={() => {
+                      onChatSelect?.(chat.id);
+                      if (isMobile) {
+                        setOpenMobile(false);
+                      }
+                    }}
                     tooltip={chat.name}
                   >
                     <MessageSquare className="h-4 w-4" />
