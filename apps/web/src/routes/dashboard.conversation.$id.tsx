@@ -5,7 +5,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Download, X, Sparkles, Plus } from "lucide-react";
+import {
+  Loader2,
+  Download,
+  X,
+  Sparkles,
+  Plus,
+  ChevronDown,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useGenerationHandlers } from "@/hooks/use-generation-handlers";
 import { useState, useEffect, useMemo } from "react";
 import { useParams, useOutletContext, useNavigate } from "react-router";
@@ -27,6 +40,7 @@ export default function ConversationDetail() {
   const [isStyleImageOpen, setIsStyleImageOpen] = useState(false);
   const [isBuyCreditsOpen, setIsBuyCreditsOpen] = useState(false);
   const [chatTransitioning, setChatTransitioning] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Find the active chat based on URL parameter
   const activeChat = useMemo(
@@ -66,17 +80,39 @@ export default function ConversationDetail() {
     userId: state.userId,
   });
 
-  const handleDownloadImage = async (imageUrl: string, index: number) => {
+  const handleDownloadImage = async (
+    imageUrl: string,
+    index: number,
+    format: "png" | "jpeg" | "webp" = "png",
+  ) => {
     try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.src = imageUrl;
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Could not get canvas context");
+
+      if (format === "jpeg") {
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      ctx.drawImage(img, 0, 0);
+
+      const dataUrl = canvas.toDataURL(`image/${format}`);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `generated-image-${index + 1}.png`;
+      a.href = dataUrl;
+      a.download = `generated-image-${index + 1}.${format}`;
       document.body.appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
       console.error("Failed to download image:", error);
@@ -206,23 +242,53 @@ export default function ConversationDetail() {
                         {message.images.map((img, idx) => (
                           <div
                             key={idx}
-                            className="group relative overflow-hidden rounded-lg"
+                            className="group relative overflow-hidden rounded-lg cursor-pointer"
+                            onClick={() => setPreviewImage(img)}
                           >
                             <img
                               src={img}
                               alt={`Generated ${idx + 1}`}
-                              className="rounded-lg shadow-md"
+                              className="rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                onClick={() => handleDownloadImage(img, idx)}
-                                className="gap-2"
-                              >
-                                <Download className="h-4 w-4" />
-                                Download
-                              </Button>
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                              <div onClick={(e) => e.stopPropagation()}>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      size="sm"
+                                      variant="secondary"
+                                      className="gap-2 shadow-lg"
+                                    >
+                                      <Download className="h-4 w-4" />
+                                      Download
+                                      <ChevronDown className="h-3 w-3 opacity-50" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="center">
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleDownloadImage(img, idx, "png")
+                                      }
+                                    >
+                                      Download as PNG
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleDownloadImage(img, idx, "jpeg")
+                                      }
+                                    >
+                                      Download as JPG
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleDownloadImage(img, idx, "webp")
+                                      }
+                                    >
+                                      Download as WebP
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
                             </div>
                           </div>
                         ))}
@@ -397,6 +463,69 @@ export default function ConversationDetail() {
               src={activeChat.config.styleImagePreview}
               alt="Style reference full view"
               className="max-h-[90vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Generated Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="relative max-h-[90vh] max-w-[90vw] flex flex-col items-center">
+            <div className="absolute right-0 top-0 -mt-12 md:-right-16 md:mt-0 flex flex-row md:flex-col gap-2 z-50">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 backdrop-blur-md"
+                onClick={() => setPreviewImage(null)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+              <div onClick={(e) => e.stopPropagation()}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 backdrop-blur-md"
+                    >
+                      <Download className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleDownloadImage(previewImage, Date.now(), "png")
+                      }
+                    >
+                      Download as PNG
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleDownloadImage(previewImage, Date.now(), "jpeg")
+                      }
+                    >
+                      Download as JPG
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleDownloadImage(previewImage, Date.now(), "webp")
+                      }
+                    >
+                      Download as WebP
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+            <img
+              src={previewImage}
+              alt="Generated full view"
+              className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
           </div>
