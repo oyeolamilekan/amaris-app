@@ -44,7 +44,7 @@ export default function DashboardIndex() {
         <header className="border-b bg-background p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <SidebarTrigger className="md:hidden" />
+              <SidebarTrigger />
               <h1 className="text-2xl font-semibold">Your Conversations</h1>
             </div>
             <Button
@@ -97,7 +97,7 @@ export default function DashboardIndex() {
   // Show empty state if no chats
   return (
     <div className="flex h-screen items-center justify-center bg-muted/20 relative">
-      <div className="absolute top-4 left-4 md:hidden">
+      <div className="absolute top-4 left-4">
         <SidebarTrigger />
       </div>
       <div className="mx-auto max-w-2xl space-y-8 text-center p-8">

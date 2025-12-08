@@ -136,7 +136,7 @@ export default function ConversationDetail() {
       {/* Header */}
       <header className="flex items-center justify-between border-b bg-background p-3 md:p-4">
         <div className="flex items-center gap-2 md:gap-4">
-          <SidebarTrigger className="md:hidden" />
+          <SidebarTrigger />
           <h1 className="text-lg md:text-xl font-semibold truncate max-w-[150px] sm:max-w-xs md:max-w-none">
             {activeChat.name}
           </h1>
