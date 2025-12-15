@@ -1,4 +1,10 @@
 import { db, chat, chatMessage, eq, and, desc } from "@amaris/db";
+import {
+  DEFAULT_MODEL_ID,
+  DEFAULT_MODEL_TYPE,
+  DEFAULT_IMAGE_COUNT,
+  DEFAULT_OUTPUT_STYLE,
+} from "../constants";
 
 /**
  * Service for managing chat sessions and messages
@@ -72,10 +78,10 @@ export async function createChat(input: CreateChatInput): Promise<string> {
     id: chatId,
     userId: input.userId,
     name: input.name,
-    modelId: input.modelId || "gemini-2.0-flash-exp",
-    modelType: input.modelType || "google:gemini-2.0-flash-exp",
-    imageCount: input.imageCount || 1,
-    outputStyle: input.outputStyle || "realistic",
+    modelId: input.modelId || DEFAULT_MODEL_ID,
+    modelType: input.modelType || DEFAULT_MODEL_TYPE,
+    imageCount: input.imageCount || DEFAULT_IMAGE_COUNT,
+    outputStyle: input.outputStyle || DEFAULT_OUTPUT_STYLE,
   });
 
   return chatId;

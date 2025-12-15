@@ -3,7 +3,7 @@
  * Handles administrative tasks like package management
  */
 
-const API_BASE_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+import { API_BASE_URL } from "../constants";
 
 export interface CreditPackage {
   id: string;
@@ -47,7 +47,8 @@ export async function listPackages(): Promise<CreditPackage[]> {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to fetch packages");
-  return res.json();
+  const json = await res.json();
+  return json.data;
 }
 
 /**
@@ -61,7 +62,7 @@ export async function createPackage(data: CreatePackageRequest): Promise<void> {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to create package");
-  return res.json();
+  await res.json();
 }
 
 /**
@@ -78,7 +79,7 @@ export async function updatePackage(
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to update package");
-  return res.json();
+  await res.json();
 }
 
 /**
@@ -90,7 +91,7 @@ export async function deletePackage(id: string): Promise<void> {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete package");
-  return res.json();
+  await res.json();
 }
 
 /**
@@ -101,7 +102,8 @@ export async function listUsers(): Promise<User[]> {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to fetch users");
-  return res.json();
+  const json = await res.json();
+  return json.data;
 }
 
 /**
@@ -118,5 +120,5 @@ export async function updateUserCredits(
     credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to update user credits");
-  return res.json();
+  await res.json();
 }

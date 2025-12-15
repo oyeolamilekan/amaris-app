@@ -1,6 +1,12 @@
 import type { Context } from "hono";
 import type { Variables } from "../middleware/auth";
 import {
+  DEFAULT_IMAGE_COUNT,
+  DEFAULT_MODEL_ID,
+  DEFAULT_MODEL_TYPE,
+  DEFAULT_OUTPUT_STYLE,
+} from "../constants";
+import {
   createChat,
   getChatById,
   listUserChats,
@@ -30,16 +36,20 @@ export async function createChatSession(c: Context<{ Variables: Variables }>) {
     const input: CreateChatInput = {
       userId,
       name: body.name || "New Conversation",
-      modelId: body.modelId,
-      modelType: body.modelType,
-      imageCount: body.imageCount,
-      outputStyle: body.outputStyle,
+      modelId: body.modelId || DEFAULT_MODEL_ID,
+      modelType: body.modelType || DEFAULT_MODEL_TYPE,
+      imageCount: body.imageCount || DEFAULT_IMAGE_COUNT,
+      outputStyle: body.outputStyle || DEFAULT_OUTPUT_STYLE,
     };
 
     const chatId = await createChat(input);
     const chat = await getChatById(chatId, userId);
 
-    return c.json({ success: true, chat });
+    return c.json({
+      success: true,
+      message: "Chat session created successfully",
+      data: { chat },
+    });
   } catch (error) {
     console.error("Create chat error:", error);
     return c.json({ error: "Failed to create chat" }, 500);
@@ -60,7 +70,11 @@ export async function getChat(c: Context<{ Variables: Variables }>) {
       return c.json({ error: "Chat not found" }, 404);
     }
 
-    return c.json({ success: true, ...result });
+    return c.json({
+      success: true,
+      message: "Chat fetched successfully",
+      data: result,
+    });
   } catch (error) {
     console.error("Get chat error:", error);
     return c.json({ error: "Failed to fetch chat" }, 500);
@@ -75,7 +89,11 @@ export async function listChats(c: Context<{ Variables: Variables }>) {
     const userId = c.get("userId") as string;
     const chats = await listUserChats(userId);
 
-    return c.json({ success: true, chats });
+    return c.json({
+      success: true,
+      message: "Chats listed successfully",
+      data: chats,
+    });
   } catch (error) {
     console.error("List chats error:", error);
     return c.json({ error: "Failed to fetch chats" }, 500);
@@ -106,7 +124,11 @@ export async function updateChatSession(c: Context<{ Variables: Variables }>) {
     await updateChat(chatId, userId, updates);
     const chat = await getChatById(chatId, userId);
 
-    return c.json({ success: true, chat });
+    return c.json({
+      success: true,
+      message: "Chat updated successfully",
+      data: { chat },
+    });
   } catch (error) {
     console.error("Update chat error:", error);
     return c.json({ error: "Failed to update chat" }, 500);
@@ -123,7 +145,11 @@ export async function deleteChatSession(c: Context<{ Variables: Variables }>) {
 
     const success = await deleteChat(chatId, userId);
 
-    return c.json({ success });
+    return c.json({
+      success,
+      message: "Chat deleted successfully",
+      data: {},
+    });
   } catch (error) {
     console.error("Delete chat error:", error);
     return c.json({ error: "Failed to delete chat" }, 500);
@@ -157,7 +183,11 @@ export async function addMessage(c: Context<{ Variables: Variables }>) {
 
     const messageId = await createMessage(input);
 
-    return c.json({ success: true, messageId });
+    return c.json({
+      success: true,
+      message: "Message added successfully",
+      data: { messageId },
+    });
   } catch (error) {
     console.error("Add message error:", error);
     return c.json({ error: "Failed to add message" }, 500);
@@ -194,7 +224,11 @@ export async function updateChatMessage(c: Context<{ Variables: Variables }>) {
 
     await updateMessage(messageId, updates);
 
-    return c.json({ success: true });
+    return c.json({
+      success: true,
+      message: "Message updated successfully",
+      data: {},
+    });
   } catch (error) {
     console.error("Update message error:", error);
     return c.json({ error: "Failed to update message" }, 500);

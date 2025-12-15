@@ -1,26 +1,7 @@
-/**
- * Available AI models for image generation
- */
+import { AVAILABLE_MODELS, type Model } from "../constants";
 
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  provider: string;
-  cost: number;
-  color: string;
-}
-
-export const AVAILABLE_MODELS: Model[] = [
-  {
-    id: "gemini-2.5-flash-image",
-    name: "Gemini 2.5 Flash Image",
-    type: "google/gemini-2.5-flash-image-preview",
-    provider: "Google",
-    cost: 0.02,
-    color: "#4285F4",
-  },
-];
+export { AVAILABLE_MODELS };
+export type { Model };
 
 /**
  * Get model by ID

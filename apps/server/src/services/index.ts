@@ -83,3 +83,13 @@ export {
   type UpdateChatInput,
   type CreateMessageInput,
 } from "./chat";
+
+// Admin Service
+export {
+  getAllPackages,
+  createCreditPackage,
+  updateCreditPackage,
+  deleteCreditPackage,
+  getAllUsersWithCredits,
+  updateUserCreditBalance,
+} from "./admin";

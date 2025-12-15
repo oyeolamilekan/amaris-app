@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import type { Variables } from "../middleware/auth";
+import { MAX_UPLOAD_SIZE, ALLOWED_IMAGE_TYPES } from "../constants";
 import {
   uploadImageToCloudinary,
   uploadBase64ToCloudinary,
@@ -40,23 +41,15 @@ export async function uploadStyleImage(c: Context<{ Variables: Variables }>) {
     }
 
     // Validate file type
-    const validTypes = [
-      "image/jpeg",
-      "image/jpg",
-      "image/png",
-      "image/webp",
-      "image/gif",
-    ];
-    if (!validTypes.includes(file.type)) {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
       return c.json(
         { error: "Invalid file type. Allowed: JPG, PNG, WEBP, GIF" },
         400,
       );
     }
 
-    // Validate file size (10MB max)
-    const maxSize = 10 * 1024 * 1024;
-    if (file.size > maxSize) {
+    // Validate file size
+    if (file.size > MAX_UPLOAD_SIZE) {
       return c.json({ error: "File too large. Maximum size is 10MB" }, 400);
     }
 
@@ -78,14 +71,17 @@ export async function uploadStyleImage(c: Context<{ Variables: Variables }>) {
 
     return c.json({
       success: true,
-      url: result.secureUrl || result.url, // Prefer secure URL
-      publicId: result.publicId,
-      fileName: file.name,
-      size: file.size,
-      mimeType: file.type,
-      width: result.width,
-      height: result.height,
-      format: result.format,
+      message: "Image uploaded successfully",
+      data: {
+        url: result.secureUrl || result.url, // Prefer secure URL
+        publicId: result.publicId,
+        fileName: file.name,
+        size: file.size,
+        mimeType: file.type,
+        width: result.width,
+        height: result.height,
+        format: result.format,
+      },
     });
   } catch (error) {
     console.error("Upload error:", error);
@@ -102,9 +98,7 @@ export async function uploadStyleImage(c: Context<{ Variables: Variables }>) {
 /**
  * Upload image from base64 encoded string
  */
-export async function uploadBase64Image(
-  c: Context<{ Variables: Variables }>,
-) {
+export async function uploadBase64Image(c: Context<{ Variables: Variables }>) {
   try {
     const userId = c.get("userId");
     if (!userId) {
@@ -142,13 +136,16 @@ export async function uploadBase64Image(
 
     return c.json({
       success: true,
-      url: result.secureUrl || result.url,
-      publicId: result.publicId,
-      fileName: fileName || "uploaded-image.png",
-      mimeType: mimeType || "image/png",
-      width: result.width,
-      height: result.height,
-      format: result.format,
+      message: "Image uploaded successfully",
+      data: {
+        url: result.secureUrl || result.url,
+        publicId: result.publicId,
+        fileName: fileName || "uploaded-image.png",
+        mimeType: mimeType || "image/png",
+        width: result.width,
+        height: result.height,
+        format: result.format,
+      },
     });
   } catch (error) {
     console.error("Base64 upload error:", error);

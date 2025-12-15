@@ -3,7 +3,7 @@
  * Handles image uploads and generation requests
  */
 
-const API_BASE_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+import { API_BASE_URL } from "../constants";
 
 export interface UploadResponse {
   success: boolean;
@@ -97,7 +97,8 @@ export async function uploadStyleImage(file: File): Promise<UploadResponse> {
       throw new Error(error.error || "Upload failed");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Upload error:", error);
     return {
@@ -128,7 +129,8 @@ export async function generateImage(
       throw new Error(error.error || "Generation failed");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Generation error:", error);
     throw error;
@@ -152,7 +154,8 @@ export async function getGeneration(
       throw new Error(error.error || "Failed to fetch generation");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return json.data;
   } catch (error) {
     console.error("Get generation error:", error);
     throw error;
@@ -180,7 +183,8 @@ export async function listGenerations(
       throw new Error(error.error || "Failed to fetch generations");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { generations: json.data };
   } catch (error) {
     console.error("List generations error:", error);
     throw error;
@@ -202,7 +206,8 @@ export async function getCredits(): Promise<CreditsResponse> {
       throw new Error(error.error || "Failed to fetch credits");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return json.data;
   } catch (error) {
     console.error("Get credits error:", error);
     throw error;
@@ -224,7 +229,8 @@ export async function getCreditPackages(): Promise<GetCreditPackagesResponse> {
       throw new Error(error.error || "Failed to fetch credit packages");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { packages: json.data };
   } catch (error) {
     console.error("Get credit packages error:", error);
     throw error;
@@ -346,7 +352,8 @@ export async function createChat(
       throw new Error(error.error || "Failed to create chat");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Create chat error:", error);
     throw error;
@@ -371,7 +378,8 @@ export async function listChats(): Promise<{
       throw new Error(error.error || "Failed to list chats");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, chats: json.data };
   } catch (error) {
     console.error("List chats error:", error);
     throw error;
@@ -395,7 +403,8 @@ export async function getChat(
       throw new Error(error.error || "Failed to get chat");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Get chat error:", error);
     throw error;
@@ -424,7 +433,8 @@ export async function updateChatAPI(
       throw new Error(error.error || "Failed to update chat");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Update chat error:", error);
     throw error;
@@ -448,7 +458,8 @@ export async function deleteChatAPI(
       throw new Error(error.error || "Failed to delete chat");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success };
   } catch (error) {
     console.error("Delete chat error:", error);
     throw error;
@@ -487,7 +498,8 @@ export async function addChatMessage(
       throw new Error(error.error || "Failed to add message");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success, ...json.data };
   } catch (error) {
     console.error("Add message error:", error);
     throw error;
@@ -524,7 +536,8 @@ export async function updateChatMessage(
       throw new Error(error.error || "Failed to update message");
     }
 
-    return await response.json();
+    const json = await response.json();
+    return { success: json.success };
   } catch (error) {
     console.error("Update message error:", error);
     throw error;

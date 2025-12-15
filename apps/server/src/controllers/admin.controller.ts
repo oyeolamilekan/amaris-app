@@ -1,35 +1,39 @@
 import type { Context } from "hono";
-import { db, eq } from "@amaris/db";
-import { creditPackage, user } from "@amaris/db/schema/auth";
-import { userCredits } from "@amaris/db/schema/generations";
 import { z } from "zod";
+import {
+  createPackageSchema,
+  updatePackageSchema,
+  updateUserCreditsSchema,
+} from "../validators/admin";
+import {
+  getAllPackages,
+  createCreditPackage,
+  updateCreditPackage,
+  deleteCreditPackage,
+  getAllUsersWithCredits,
+  updateUserCreditBalance,
+} from "../services";
 
-// Schemas
-const createPackageSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  credits: z.number().int().positive(),
-  price: z.number().int().positive(), // in cents
-  polarProductId: z.string().min(1),
-});
-
-const updatePackageSchema = z.object({
-  name: z.string().min(1).optional(),
-  credits: z.number().int().positive().optional(),
-  price: z.number().int().positive().optional(),
-  polarProductId: z.string().min(1).optional(),
-});
-
-const updateUserCreditsSchema = z.object({
-  credits: z.number().int().min(0),
-});
+/**
+ * Admin Controller
+ * Handles administrative tasks
+ */
 
 /**
  * List all credit packages
  */
 export const listPackages = async (c: Context) => {
-  const packages = await db.select().from(creditPackage);
-  return c.json(packages);
+  try {
+    const packages = await getAllPackages();
+    return c.json({
+      success: true,
+      message: "Packages successfully fetched",
+      data: packages,
+    });
+  } catch (error) {
+    console.error("List packages error:", error);
+    return c.json({ error: "Failed to fetch packages" }, 500);
+  }
 };
 
 /**
@@ -40,11 +44,12 @@ export const createPackage = async (c: Context) => {
     const body = await c.req.json();
     const data = createPackageSchema.parse(body);
 
-    await db.insert(creditPackage).values({
-      ...data,
-      currency: "usd",
+    await createCreditPackage(data);
+    return c.json({
+      success: true,
+      message: "Package successfully created",
+      data: {},
     });
-    return c.json({ success: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return c.json(
@@ -52,7 +57,7 @@ export const createPackage = async (c: Context) => {
         400,
       );
     }
-    console.error("Failed to create package:", error);
+    console.error("Create package error:", error);
     return c.json({ error: "Failed to create package" }, 500);
   }
 };
@@ -61,20 +66,18 @@ export const createPackage = async (c: Context) => {
  * Update an existing credit package
  */
 export const updatePackage = async (c: Context) => {
-  const id = c.req.param("id");
   try {
+    const id = c.req.param("id");
     const body = await c.req.json();
     const data = updatePackageSchema.parse(body);
 
-    await db
-      .update(creditPackage)
-      .set({
-        ...data,
-        updatedAt: new Date(),
-      })
-      .where(eq(creditPackage.id, id));
+    await updateCreditPackage(id, data);
 
-    return c.json({ success: true });
+    return c.json({
+      success: true,
+      message: "Package successfully updated",
+      data: {},
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return c.json(
@@ -82,7 +85,7 @@ export const updatePackage = async (c: Context) => {
         400,
       );
     }
-    console.error("Failed to update package:", error);
+    console.error("Update package error:", error);
     return c.json({ error: "Failed to update package" }, 500);
   }
 };
@@ -91,12 +94,16 @@ export const updatePackage = async (c: Context) => {
  * Delete a credit package
  */
 export const deletePackage = async (c: Context) => {
-  const id = c.req.param("id");
   try {
-    await db.delete(creditPackage).where(eq(creditPackage.id, id));
-    return c.json({ success: true });
+    const id = c.req.param("id");
+    await deleteCreditPackage(id);
+    return c.json({
+      success: true,
+      message: "Package successfully deleted",
+      data: {},
+    });
   } catch (error) {
-    console.error("Failed to delete package:", error);
+    console.error("Delete package error:", error);
     return c.json({ error: "Failed to delete package" }, 500);
   }
 };
@@ -105,51 +112,35 @@ export const deletePackage = async (c: Context) => {
  * List all users with their credits
  */
 export const listUsers = async (c: Context) => {
-  const users = await db
-    .select({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      role: (user as any).role,
-      createdAt: user.createdAt,
-      credits: userCredits.credits,
-    })
-    .from(user)
-    .leftJoin(userCredits, eq(user.id, userCredits.userId));
-
-  return c.json(users);
+  try {
+    const users = await getAllUsersWithCredits();
+    return c.json({
+      success: true,
+      message: "Users successfully fetched",
+      data: users,
+    });
+  } catch (error) {
+    console.error("List users error:", error);
+    return c.json({ error: "Failed to fetch users" }, 500);
+  }
 };
 
 /**
  * Update user credits
  */
 export const updateUserCredits = async (c: Context) => {
-  const userId = c.req.param("userId");
   try {
+    const userId = c.req.param("userId");
     const body = await c.req.json();
     const { credits } = updateUserCreditsSchema.parse(body);
 
-    // Check if user credits record exists
-    const [existing] = await db
-      .select()
-      .from(userCredits)
-      .where(eq(userCredits.userId, userId));
+    await updateUserCreditBalance(userId, credits);
 
-    if (existing) {
-      await db
-        .update(userCredits)
-        .set({ credits, updatedAt: new Date() })
-        .where(eq(userCredits.userId, userId));
-    } else {
-      await db.insert(userCredits).values({
-        id: crypto.randomUUID(),
-        userId,
-        credits,
-      });
-    }
-
-    return c.json({ success: true });
+    return c.json({
+      success: true,
+      message: "User credits successfully updated",
+      data: {},
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return c.json(
@@ -157,7 +148,7 @@ export const updateUserCredits = async (c: Context) => {
         400,
       );
     }
-    console.error("Failed to update user credits:", error);
+    console.error("Update user credits error:", error);
     return c.json({ error: "Failed to update user credits" }, 500);
   }
 };
