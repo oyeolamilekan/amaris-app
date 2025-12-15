@@ -80,9 +80,18 @@ export default function Home() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="py-20 md:py-32 px-4 text-center space-y-8 max-w-4xl mx-auto">
-          <Badge variant="secondary" className="rounded-full px-4 py-1 text-sm">
-            New: Style Reference V2 is live
-          </Badge>
+          <a
+            href="https://github.com/oyeolamilekan/amaris-app"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Badge
+              variant="secondary"
+              className="rounded-full px-4 py-1 text-sm"
+            >
+              New: Amaris is now open source
+            </Badge>
+          </a>
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-balance">
             Turn Your Ideas <br className="hidden md:block" />
             <span className="text-muted-foreground">Into Reality.</span>
