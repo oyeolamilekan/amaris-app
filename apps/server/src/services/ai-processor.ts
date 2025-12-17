@@ -1,14 +1,6 @@
 import { generateText } from "ai";
 import { completeGeneration, failGeneration } from "./generation";
-import type { Model } from "../lib/models";
-
-export interface ProcessGenerationInput {
-  generationId: string;
-  prompt: string;
-  styleImageUrl: string;
-  model?: Model;
-  userId: string;
-}
+import type { Model, ProcessGenerationInput } from "../constants";
 
 async function downloadImageAsBase64(imageUrl: string): Promise<string> {
   const response = await fetch(imageUrl);

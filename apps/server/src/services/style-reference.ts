@@ -1,26 +1,12 @@
 import { db, styleReference, eq, desc } from "@amaris/db";
+import type {
+  StyleReferenceRecord,
+  CreateStyleReferenceInput,
+} from "../constants";
 
 /**
  * Service for managing style reference records
  */
-
-export interface StyleReferenceRecord {
-  id: string;
-  userId: string;
-  name: string;
-  imageUrl: string;
-  description?: string | null;
-  usageCount: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateStyleReferenceInput {
-  userId: string;
-  name: string;
-  imageUrl: string;
-  description?: string;
-}
 
 /**
  * Create a new style reference

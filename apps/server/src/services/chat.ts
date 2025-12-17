@@ -4,69 +4,16 @@ import {
   DEFAULT_MODEL_TYPE,
   DEFAULT_IMAGE_COUNT,
   DEFAULT_OUTPUT_STYLE,
+  type ChatRecord,
+  type ChatMessageRecord,
+  type CreateChatInput,
+  type UpdateChatInput,
+  type CreateMessageInput,
 } from "../constants";
 
 /**
  * Service for managing chat sessions and messages
  */
-
-export interface ChatRecord {
-  id: string;
-  userId: string;
-  name: string;
-  draft: string;
-  isGenerating: boolean;
-  modelId: string;
-  modelType: string;
-  imageCount: number;
-  outputStyle: string;
-  styleImageUrl: string | null;
-  styleImageName: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ChatMessageRecord {
-  id: string;
-  chatId: string;
-  role: "user" | "assistant";
-  content: string;
-  images: string[];
-  status: "pending" | "completed" | "failed" | null;
-  error: string | null;
-  createdAt: Date;
-}
-
-export interface CreateChatInput {
-  userId: string;
-  name: string;
-  modelId?: string;
-  modelType?: string;
-  imageCount?: number;
-  outputStyle?: string;
-}
-
-export interface UpdateChatInput {
-  name?: string;
-  draft?: string;
-  isGenerating?: boolean;
-  modelId?: string;
-  modelType?: string;
-  imageCount?: number;
-  outputStyle?: string;
-  styleImageUrl?: string;
-  styleImageName?: string;
-}
-
-export interface CreateMessageInput {
-  id?: string;
-  chatId: string;
-  role: "user" | "assistant";
-  content: string;
-  images?: string[];
-  status?: "pending" | "completed" | "failed";
-  error?: string;
-}
 
 /**
  * Create a new chat session

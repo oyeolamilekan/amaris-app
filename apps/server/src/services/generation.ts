@@ -1,42 +1,13 @@
 import { db, generation, eq, and, desc } from "@amaris/db";
+import type {
+  GenerationRecord,
+  CreateGenerationInput,
+  UpdateGenerationInput,
+} from "../constants";
 
 /**
  * Service for managing image generation records
  */
-
-export interface GenerationRecord {
-  id: string;
-  userId: string;
-  prompt: string;
-  styleImageUrl: string;
-  model: string;
-  status: "processing" | "completed" | "failed";
-  generatedImageUrl?: string | null;
-  errorMessage?: string | null;
-  metadata?: any;
-  creditsUsed: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateGenerationInput {
-  userId: string;
-  prompt: string;
-  styleImageUrl: string;
-  model: string;
-  creditsUsed: number;
-  dimensions: { width: number; height: number };
-  styleImageName?: string;
-  outputStyle?: string;
-  chatId?: string;
-}
-
-export interface UpdateGenerationInput {
-  status?: "processing" | "completed" | "failed";
-  generatedImageUrl?: string;
-  errorMessage?: string;
-  metadata?: any;
-}
 
 /**
  * Create a new generation record

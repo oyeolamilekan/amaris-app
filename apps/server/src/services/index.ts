@@ -33,9 +33,6 @@ export {
   failGeneration,
   deleteGeneration,
   getUserGenerationCount,
-  type GenerationRecord,
-  type CreateGenerationInput,
-  type UpdateGenerationInput,
 } from "./generation";
 
 // Style Reference Service
@@ -47,12 +44,10 @@ export {
   incrementStyleReferenceUsage,
   deleteStyleReference,
   getMostUsedStyleReferences,
-  type StyleReferenceRecord,
-  type CreateStyleReferenceInput,
 } from "./style-reference";
 
 // AI Processor Service
-export { processGeneration, type ProcessGenerationInput } from "./ai-processor";
+export { processGeneration } from "./ai-processor";
 
 // Cloudinary Upload Service
 export {
@@ -77,11 +72,6 @@ export {
   deleteChatMessages,
   getChatWithMessages,
   getUserChatCount,
-  type ChatRecord,
-  type ChatMessageRecord,
-  type CreateChatInput,
-  type UpdateChatInput,
-  type CreateMessageInput,
 } from "./chat";
 
 // Admin Service
@@ -93,3 +83,18 @@ export {
   getAllUsersWithCredits,
   updateUserCreditBalance,
 } from "./admin";
+
+// Shared Types
+export {
+  type GenerationRecord,
+  type CreateGenerationInput,
+  type UpdateGenerationInput,
+  type StyleReferenceRecord,
+  type CreateStyleReferenceInput,
+  type ProcessGenerationInput,
+  type ChatRecord,
+  type ChatMessageRecord,
+  type CreateChatInput,
+  type UpdateChatInput,
+  type CreateMessageInput,
+} from "../constants";
