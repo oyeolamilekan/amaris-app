@@ -1,135 +1,159 @@
-# amaris
+# Amaris
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, React Router, Hono, and more.
+Amaris is a full-stack SaaS application for AI-powered image generation, built with the **Better-T-Stack**. It features a modern chat-based interface that allows users to generate images using text prompts and style references, leveraging the power of Google's Gemini 2.5 models through the Vercel AI Gateway.
 
-## Features
+## 🚀 Features
 
-- **TypeScript** - For type safety and improved developer experience
-- **React Router** - Declarative routing for React
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **Hono** - Lightweight, performant server framework
-- **Bun** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Google Gemini** - AI-powered image generation via Vercel AI Gateway
-- **Vercel AI Gateway** - Request routing, caching, rate limiting, and analytics
+- **AI Image Generation**: Generate high-quality images using `google/gemini-2.5-flash-image-preview`.
+- **Style Transfer**: Upload reference images to guide the style of generated outputs.
+- **Chat Interface**: Conversational workflow for iterating on prompts and results.
+- **Vision Capabilities**: Analyze style images using Gemini's vision capabilities.
+- **Credit System**: Built-in credit management for usage limits and monetization.
+- **Authentication**: Secure social signin authentication via Better-Auth.
+- **Payments**: Subscription and one-time payment support via Polar.sh.
+- **Responsive UI**: Modern, dark-mode enabled interface built with React 19, TailwindCSS 4, and shadcn/ui.
 
-## Getting Started
+## 🛠 Tech Stack
 
-First, install the dependencies:
+### Core
+- **Runtime**: [Bun](https://bun.sh) - Fast JavaScript runtime and package manager.
+- **Monorepo**: Turborepo-style workspace structure.
 
-```bash
-bun install
-```
+### Frontend (`apps/web`)
+- **Framework**: React 19 + React Router 7.
+- **Styling**: TailwindCSS 4 + shadcn/ui.
+- **State Management**: TanStack Query.
+- **Forms**: TanStack Form + Zod.
 
-## Environment Setup
+### Backend (`apps/server`)
+- **Server**: [Hono](https://hono.dev) - Ultrafast web framework.
+- **AI**: Vercel AI SDK + Google Gemini.
+- **Storage**: Cloudinary (Image storage).
 
-### 1. Database Setup
+### Data & Auth (`packages/db`, `packages/auth`)
+- **Database**: PostgreSQL.
+- **ORM**: Drizzle ORM.
+- **Auth**: Better-Auth.
 
-This project uses PostgreSQL with Drizzle ORM.
+## 🏗 Architecture
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details:
-
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/amaris
-```
-
-3. Apply the schema to your database:
-```bash
-bun run db:push
-```
-
-### 2. Google Gemini API Setup
-
-This project uses Google Gemini for AI-powered image generation.
-
-1. Get your Google AI API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Add the API key to your `apps/server/.env` file:
-
-```env
-GOOGLE_GENERATIVE_AI_API_KEY=your_google_api_key_here
-```
-
-### 3. Other Environment Variables
-
-Add the following to your `apps/server/.env`:
-
-```env
-CORS_ORIGIN=http://localhost:5173
-POLAR_ACCESS_TOKEN=your_polar_token
-POLAR_SUCCESS_URL=http://localhost:5173/success
-```
-
-And to your `apps/web/.env`:
-
-```env
-VITE_SERVER_URL=http://localhost:3000
-```
-
-
-Then, run the development server:
-
-```bash
-bun run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
-
-
-
-
-
-
-
-## Project Structure
+The project is structured as a monorepo:
 
 ```
 amaris/
 ├── apps/
-│   ├── web/         # Frontend application (React + React Router)
-│   └── server/      # Backend API (Hono)
+│   ├── web/                    # React frontend application
+│   │   ├── src/routes/         # File-based routing
+│   │   └── src/components/     # UI components
+│   │
+│   └── server/                 # Hono backend API
+│       ├── src/routes/         # API endpoints
+│       ├── src/services/       # Business logic (AI, Credits, Chat)
+│       └── src/constants.ts    # Shared types and constants
+│
 ├── packages/
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── auth/                   # Shared authentication configuration
+│   ├── db/                     # Database schema and Drizzle config
+│   └── config/                 # Shared TypeScript configuration
 ```
 
-## Available Scripts
+## 🤖 AI Implementation
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run dev:server`: Start only the server
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run db:push`: Push schema changes to database
-- `bun run db:studio`: Open database studio UI
+Amaris uses a sophisticated AI pipeline:
 
-## AI Image Generation
+1.  **Gateway**: All AI requests are routed through **Vercel AI Gateway** for caching, rate limiting, and observability.
+2.  **Models**:
+    *   **Generation**: `google/gemini-2.5-flash-image-preview` for creating images.
+    *   **Vision/Text**: `google/gemini-2.5-flash-preview` for analyzing style references and processing prompts.
+3.  **Workflow**:
+    *   User uploads a style reference (optional).
+    *   User enters a text prompt in the chat.
+    *   The backend processes the request, deducting credits.
+    *   Gemini generates the image based on the prompt and style reference.
+    *   Result is stored and displayed in the chat stream.
 
-This project uses **Google Gemini 2.5 Flash Image** for AI-powered image generation, routed through **Vercel AI Gateway** for enhanced performance and observability. The implementation uses the Vercel AI SDK with the following features:
+## 🏁 Getting Started
 
-- **AI Gateway Routing**: All requests go through Vercel AI Gateway for caching, rate limiting, and analytics
-- **Text-to-Image**: Generate images from text prompts
-- **Style Transfer**: Use reference images to guide generation style
-- **Multi-modal Output**: Supports both text and image responses
-- **Vision Analysis**: Analyze style images using Gemini's vision capabilities
-- **Request Observability**: Monitor and track all AI requests through the gateway
+### Prerequisites
 
-### Supported Features
+- [Bun](https://bun.sh) installed.
+- PostgreSQL database.
+- Google AI Studio API Key.
+- Cloudinary Account.
+- Polar.sh Account (optional for payments).
 
-- Aspect ratios: 1:1, 16:9, 9:16, 4:3
-- Style-guided generation using reference images
-- Automatic image storage via Cloudinary
-- Real-time generation tracking
+### Installation
 
-### Model Configuration
+1.  **Install dependencies**:
+    ```bash
+    bun install
+    ```
 
-The application uses:
-- **Image Generation**: `google/gemini-2.5-flash-image-preview`
-- **Vision Analysis**: `google/gemini-2.5-flash-preview`
+2.  **Environment Setup**:
 
-All previous AI models (Fal AI, Prodia, xAI) have been replaced with Google Gemini, routed through Vercel AI Gateway for automatic caching, rate limiting, and analytics—providing a unified, powerful, and production-ready AI experience.
+    Create `apps/server/.env`:
+    ```env
+    # Database
+    DATABASE_URL=postgresql://user:password@localhost:5432/amaris
+
+    # AI
+    GOOGLE_GENERATIVE_AI_API_KEY=your_google_api_key
+
+    # Security
+    CORS_ORIGIN=http://localhost:5173
+
+    # Payments (Polar.sh)
+    POLAR_ACCESS_TOKEN=your_polar_token
+    POLAR_SUCCESS_URL=http://localhost:5173/success
+
+    # Storage (Cloudinary)
+    CLOUDINARY_CLOUD_NAME=your_cloud_name
+    CLOUDINARY_API_KEY=your_api_key
+    CLOUDINARY_API_SECRET=your_api_secret
+    ```
+
+    Create `apps/web/.env`:
+    ```env
+    VITE_SERVER_URL=http://localhost:3000
+    ```
+
+3.  **Database Setup**:
+    Push the schema to your database:
+    ```bash
+    bun run db:push
+    ```
+
+4.  **Run Development Server**:
+    Start both frontend and backend:
+    ```bash
+    bun run dev
+    ```
+
+    - Frontend: [http://localhost:5173](http://localhost:5173)
+    - Backend: [http://localhost:3000](http://localhost:3000)
+
+## 💾 Database Schema
+
+Key tables in the application:
+
+- **User & Auth**: `user`, `session`, `account` (Managed by Better-Auth).
+- **Generations**:
+    - `chat`: Stores conversation threads.
+    - `chat_message`: Stores individual messages and image references.
+    - `generation`: Tracks generation requests, status, and metadata.
+    - `style_reference`: Stores user-uploaded style reference images.
+- **Economy**:
+    - `user_credits`: Tracks user credit balances.
+    - `credit_package`: Defines purchasable credit bundles.
+
+## 📜 Scripts
+
+- `bun run dev`: Start all apps in dev mode.
+- `bun run build`: Build all apps for production.
+- `bun run db:push`: Push schema changes to DB.
+- `bun run db:studio`: Open Drizzle Studio to view data.
+- `bun run check-types`: Run TypeScript validation.
+
+## 📄 License
+
+This project is licensed under the MIT License.
