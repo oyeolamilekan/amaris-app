@@ -8,7 +8,7 @@ export const generateImageSchema = z.object({
     .string()
     .min(1, "Prompt is required")
     .max(1000, "Prompt must be less than 1000 characters"),
-  styleImageUrl: z.string().url("Style image must be a valid URL"),
+  styleImageUrl: z.url("Style image must be a valid URL"),
   styleImageName: z.string().optional(),
   model: z.string().min(1, "Model is required").optional(),
   modelType: z.string().optional(),
@@ -24,7 +24,7 @@ export const styleReferenceSchema = z.object({
     .string()
     .min(1, "Name is required")
     .max(100, "Name must be less than 100 characters"),
-  imageUrl: z.string().url("Image URL must be valid"),
+  imageUrl: z.url("Image URL must be valid"),
   description: z
     .string()
     .max(500, "Description must be less than 500 characters")
